@@ -39,9 +39,14 @@ def map_city_name(city: str) -> str:
         "dehradun": "zirakpur", 
         "rajpura": "zirakpur"
         # Add more mappings here
+        "gurgaon": "delhi",
+        "hapur": "ghaziabad",
+        "jhajjar": "delhi",
+        "sonipat": "delhi"
     }
     if pd.isna(city):
         return city
     city_str = str(city).strip()
     return city_map.get(city_str.lower(), city_str)
+
 
