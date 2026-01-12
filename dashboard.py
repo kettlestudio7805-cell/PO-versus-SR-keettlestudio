@@ -90,33 +90,35 @@ def main():
     # Convert all columns to string for Arrow compatibility
     st.dataframe(result_df.astype(str))
 
-    # --- New Table: Partially Serviced and Not Found with Expiry > Today ---
+    
     
     # --- New Table: Partially Serviced and Not Found with Expiry > Today ---
-today = pd.Timestamp.today().normalize()
+        # --- New Table: Partially Serviced and Not Found with Expiry > Today ---
+    today = pd.Timestamp.today().normalize()
 
-# Safe conversion of expiry date (handles DD-MM-YYYY, invalid values, blanks)
-result_df['po_expiry_date'] = pd.to_datetime(
-    result_df['po_expiry_date'],
-    errors='coerce',
-    dayfirst=True
-)
+    # Safe conversion of expiry date (handles DD-MM-YYYY, invalid values, blanks)
+    result_df['po_expiry_date'] = pd.to_datetime(
+        result_df['po_expiry_date'],
+        errors='coerce',
+        dayfirst=True
+    )
 
-# Map city names in result_df
-result_df['city_mapped'] = result_df['city'].apply(map_city_name)
+    # Map city names in result_df
+    result_df['city_mapped'] = result_df['city'].apply(map_city_name)
 
-# Filter rows
-filtered = result_df[
-    (result_df['Status'] == 'Partially Serviced') |
-    ((result_df['Status'] == 'Not Found') & (result_df['po_expiry_date'] > today))
-]
+    # Filter rows
+    filtered = result_df[
+        (result_df['Status'] == 'Partially Serviced') |
+        ((result_df['Status'] == 'Not Found') & (result_df['po_expiry_date'] > today))
+    ]
 
-not_found = result_df[
-    (result_df['Status'] == 'Not Found') &
-    (result_df['po_expiry_date'] > today)
-]
+    not_found = result_df[
+        (result_df['Status'] == 'Not Found') &
+        (result_df['po_expiry_date'] > today)
+    ]
 
-filtered = pd.concat([filtered, not_found]).drop_duplicates()
+    filtered = pd.concat([filtered, not_found]).drop_duplicates()
+
 
 
     # Prepare new table rows
@@ -180,4 +182,5 @@ filtered = pd.concat([filtered, not_found]).drop_duplicates()
 
 if __name__ == "__main__":
     main()
+
 
